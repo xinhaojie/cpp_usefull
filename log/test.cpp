@@ -5,7 +5,7 @@
 int main() {
     while (true) {
         // 输出不同级别的日志
-        LOG_DBG("This is a debug log message.");
+        LOG_DEBUG("This is a debug log message.");
         LOG_INFO("This is an info log message.");
         LOG_WARN("This is a warning log message.");
         LOG_ERROR("This is an error log message.");

@@ -50,8 +50,8 @@
 * @Author       : xinhaojie xinhaojie@qq.com
 * @Date         : 2025-03-08 14:03:56
 * @LastEditors  : xinhaojie xinhaojie@qq.com
-* @LastEditTime : 2025-03-08 15:24:40
-* @FilePath     : /cpp_usefull/include/logger.hxx
+* @LastEditTime : 2025-03-08 17:16:07
+* @FilePath     : /cpp_usefull/lib/log/logger.hxx
 * @Description  : 辛豪杰自用的日志库，带上头文件
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
@@ -82,13 +82,15 @@ namespace fs = std::filesystem;
 #define MAX_ROLLED_LOG_FILES 5
 // 定义是否压缩日志文件的宏
 #define COMPRESS_LOG_FILES 1
+// 定义是否输出日子到文件
+#define OUTPUT_LOG_TO_FILE 1
 
 // 定义日志级别枚举
 enum class log_level {
-    DBG,
-    INFO,
-    WARN,
-    ERROR
+    _DEBUG,
+    _INFO,
+    _WARN,
+    _ERROR
 };
 
 class logger {
@@ -121,10 +123,10 @@ public:
         std::ostringstream oss_;
     };
 
-    log_stream dbg(const std::string& file, int line) { return log_stream(*this, log_level::DBG, file, line); }
-    log_stream info(const std::string& file, int line) { return log_stream(*this, log_level::INFO, file, line); }
-    log_stream warn(const std::string& file, int line) { return log_stream(*this, log_level::WARN, file, line); }
-    log_stream error(const std::string& file, int line) { return log_stream(*this, log_level::ERROR, file, line); }
+    log_stream debug(const std::string& file, int line) { return log_stream(*this, log_level::_DEBUG, file, line); }
+    log_stream info(const std::string& file, int line) { return log_stream(*this, log_level::_INFO, file, line); }
+    log_stream warn(const std::string& file, int line) { return log_stream(*this, log_level::_WARN, file, line); }
+    log_stream error(const std::string& file, int line) { return log_stream(*this, log_level::_ERROR, file, line); }
 
     void logf(log_level level, const std::string& file, int line, const char* format, ...) {
         std::va_list args;
@@ -138,14 +140,18 @@ public:
 private:
     logger(const std::string& base_filename, size_t max_size)
         : base_filename_(base_filename), max_size_(max_size) {
+#if OUTPUT_LOG_TO_FILE
         create_log_directory();
         open_log_file();
+#endif
     }
 
     ~logger() {
+#if OUTPUT_LOG_TO_FILE
         if (log_file_.is_open()) {
             log_file_.close();
         }
+#endif
     }
 
     logger(const logger&) = delete;
@@ -306,7 +312,7 @@ private:
 #ifdef DEBUG
         bool should_log = true;
 #else
-        bool should_log = level != log_level::DBG;
+        bool should_log = level != log_level::_DEBUG;
 #endif
 
         if (should_log) {
@@ -314,22 +320,22 @@ private:
             std::ostringstream oss;
             std::string level_str;
             switch (level) {
-                case log_level::DBG:
-                    level_str = "DBG";
+                case log_level::_DEBUG:
+                    level_str = "DEBUG";
                     break;
-                case log_level::INFO:
+                case log_level::_INFO:
                     level_str = "INFO";
                     break;
-                case log_level::WARN:
+                case log_level::_WARN:
                     level_str = "WARN";
                     break;
-                case log_level::ERROR:
+                case log_level::_ERROR:
                     level_str = "ERROR";
                     break;
             }
             oss << "[" << get_current_time_with_milliseconds() << " " << fs::path(file).filename().string() << ":" << line << "] [" << level_str << "] " << value << std::endl;
             std::string log_msg = oss.str();
-
+#if OUTPUT_LOG_TO_FILE
             if (!log_file_.is_open()) {
                 open_log_file();
             }
@@ -343,9 +349,11 @@ private:
                     roll_over();
                 }
             }
-
+#endif
+#ifdef DEBUG
             // 同时输出到控制台
             std::cout << log_msg;
+#endif
         }
     }
 
@@ -357,11 +365,11 @@ private:
 };
 
 // 方便使用的宏定义
-#define LOG_DBG(...) logger::get_instance().dbg(__FILE__, __LINE__) << __VA_ARGS__
+#define LOG_DEBUG(...) logger::get_instance().debug(__FILE__, __LINE__) << __VA_ARGS__
 #define LOG_INFO(...) logger::get_instance().info(__FILE__, __LINE__) << __VA_ARGS__
 #define LOG_WARN(...) logger::get_instance().warn(__FILE__, __LINE__) << __VA_ARGS__
 #define LOG_ERROR(...) logger::get_instance().error(__FILE__, __LINE__) << __VA_ARGS__
-#define LOG_DBG_F(fmt, ...) logger::get_instance().logf(log_level::DBG, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define LOG_INFO_F(fmt, ...) logger::get_instance().logf(log_level::INFO, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define LOG_WARN_F(fmt, ...) logger::get_instance().logf(log_level::WARN, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define LOG_ERROR_F(fmt, ...) logger::get_instance().logf(log_level::ERROR, __FILE__, __LINE__, fmt, __VA_ARGS__)
+#define LOG_DEBUG_F(fmt, ...) logger::get_instance().logf(log_level::_DEBUG, __FILE__, __LINE__, fmt, __VA_ARGS__)
+#define LOG_INFO_F(fmt, ...) logger::get_instance().logf(log_level::_INFO, __FILE__, __LINE__, fmt, __VA_ARGS__)
+#define LOG_WARN_F(fmt, ...) logger::get_instance().logf(log_level::_WARN, __FILE__, __LINE__, fmt, __VA_ARGS__)
+#define LOG_ERROR_F(fmt, ...) logger::get_instance().logf(log_level::_ERROR, __FILE__, __LINE__, fmt, __VA_ARGS__)
