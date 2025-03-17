@@ -6,7 +6,7 @@
 #include <nlohmann/json.hpp>
 
 // 定义自己的 JSON 序列化及反序列化类
-class MyJsonHandler {
+class JsonWapper {
 public:
     // 序列化对象为 JSON 字符串
     template<typename T>
