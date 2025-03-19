@@ -44,11 +44,19 @@ JSON_DIR = $(ROOT_DIR)/json
 LOG_DIR = $(ROOT_DIR)/log
 NET_DIR = $(ROOT_DIR)/net
 SQLITE3_DIR = $(ROOT_DIR)/sqlite3
-SYSTEM_TOOLS_DIR = $(ROOT_DIR)/system_tools
-
+SYSTEM_TOOLS_DIR = $(ROOT_DIR)/system
+FLAG_DIR = $(ROOT_DIR)/flag
+TIME_DIR = $(ROOT_DIR)/time
+RANDOM_DIR = $(ROOT_DIR)/rand
+TASK_DIR = $(ROOT_DIR)/task
+PATH_DIR = $(ROOT_DIR)/path
+FS_DIR = $(ROOT_DIR)/fs
+STRING_DIR = $(ROOT_DIR)/string
+UNITTEST_DIR = $(ROOT_DIR)/unit_test
 ############################### 编译头文件定义 #######################################
 INCLUDE_ALL = -I$(BASE64_DIR) -I$(ENCRYPT_DIR) -I$(INI_DIR) -I$(JSON_DIR) -I$(JSON_DIR)/nlohmann
-INCLUDE_ALL += -I$(LOG_DIR) -I$(NET_DIR) -I$(SQLITE3_DIR) -I$(SYSTEM_TOOLS_DIR)
+INCLUDE_ALL += -I$(LOG_DIR) -I$(NET_DIR) -I$(SQLITE3_DIR) -I$(SYSTEM_TOOLS_DIR) -I$(FLAG_DIR) -I$(TIME_DIR)
+INCLUDE_ALL += -I$(RANDOM_DIR) -I$(TASK_DIR) -I$(PATH_DIR) -I$(FS_DIR)
 
 ############################### 编译参数定义 ########################################
 CPPFLAGE_DEFINE = -std=c++17 -DDEBUG -g -Wall -Werror -Wno-unused-function
@@ -69,8 +77,24 @@ NET_OBJ = $(NET_DIR)/tiny_net.o
 NET_TEST_OBJ = $(NET_DIR)/test.o
 SQLITE3_OBJ = $(SQLITE3_DIR)/sqlite3.o
 SQLITE3_TEST_OBJ = $(SQLITE3_DIR)/test.o
-SYSTEM_TOOLS_OBJ = $(SYSTEM_TOOLS_DIR)/system_tools.o
-SYSTEM_TOOLS_TEST_OBJ = $(SYSTEM_TOOLS_DIR)/test.o
+SYSTEM_OBJ = $(SYSTEM_TOOLS_DIR)/tiny_system.o
+SYSTEM_TEST_OBJ = $(SYSTEM_TOOLS_DIR)/test.o
+FLAG_OBJ = $(FLAG_DIR)/tiny_flag.o
+FLAG_TEST_OBJ = $(FLAG_DIR)/test.o
+TIME_OBJ = $(TIME_DIR)/tiny_time.o
+TIME_TEST_OBJ = $(TIME_DIR)/test.o
+RAND_OBJ = $(RANDOM_DIR)/tiny_rand.o
+RAND_TEST_OBJ = $(RANDOM_DIR)/test.o
+TASK_OBJ = $(TASK_DIR)/tiny_task.o
+TASK_TEST_OBJ = $(TASK_DIR)/test.o
+PATH_OBJ = $(PATH_DIR)/tiny_path.o
+PATH_TEST_OBJ = $(PATH_DIR)/test.o
+FS_OBJ = $(FS_DIR)/tiny_fs.o
+FS_TEST_OBJ = $(FS_DIR)/test.o
+STRING_OBJ = $(STRING_DIR)/tiny_string.o
+STRING_TEST_OBJ = $(STRING_DIR)/test.o
+UNITTEST_OBJ = $(UNITTEST_DIR)/tiny_unit.o
+UNITTEST_TEST_OBJ = $(UNITTEST_DIR)/test.o
 
 .PHONY: all start
 
@@ -91,9 +115,9 @@ usage:
 	@echo "* make system_tools:  Build system_tools"
 	@echo "* make test:     Build all test"
 	@echo "************************************************************************"
-all:$(BASE64_OBJ) $(ENCRYPT_OBJ) $(INI_OBJ) $(JSON_OBJ) $(LOG_OBJ) $(NET_OBJ) $(SQLITE3_OBJ) $(SYSTEM_TOOLS_OBJ)
+all:$(BASE64_OBJ) $(ENCRYPT_OBJ) $(INI_OBJ) $(JSON_OBJ) $(LOG_OBJ) $(NET_OBJ) $(SQLITE3_OBJ) $(SYSTEM_OBJ)
 	$(Q) echo "    LD "$(notdir $@)
-	$(Q) $(cPP) -shared -fPIC -o libtiny_tools.so $(BASE64_OBJ) $(ENCRYPT_OBJ) $(INI_OBJ) $(JSON_OBJ) $(LOG_OBJ) $(NET_OBJ) $(SQLITE3_OBJ) $(SYSTEM_TOOLS_OBJ)
+	$(Q) $(cPP) -shared -fPIC -o libtiny_tools.so $(BASE64_OBJ) $(ENCRYPT_OBJ) $(INI_OBJ) $(JSON_OBJ) $(LOG_OBJ) $(NET_OBJ) $(SQLITE3_OBJ) $(SYSTEM_OBJ)
 base64:start $(BASE64_OBJ) $(BASE64_TEST_OBJ)
 	$(Q) echo "    LD "$(notdir $@)
 	$(Q) $(CPP) -o $(OUT_DIR)/base64_test $(BASE64_TEST_OBJ) $(BASE64_OBJ)
@@ -110,7 +134,41 @@ net:start $(NET_OBJ) $(NET_TEST_OBJ)
 	$(Q) echo "    LD "$(notdir $@)
 	$(Q) $(CPP) -o $(OUT_DIR)/net_test $(NET_TEST_OBJ) $(NET_OBJ) -lpthread
 
+flag:start $(FLAG_OBJ) $(FLAG_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/flag_test $(FLAG_TEST_OBJ) $(FLAG_OBJ) -lpthread
 
+time:start $(TIME_OBJ) $(TIME_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/time_test $(TIME_TEST_OBJ) $(TIME_OBJ) -lpthread
+
+rand:start $(RAND_OBJ) $(RAND_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/rand_test $(RAND_TEST_OBJ) $(RAND_OBJ) -lpthread
+
+task:start $(TASK_OBJ) $(TASK_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/task_test $(TASK_TEST_OBJ) $(TASK_OBJ) -lpthread
+
+path:start $(PATH_OBJ) $(PATH_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/path_test $(PATH_TEST_OBJ) $(PATH_OBJ) -lpthread
+
+fs:start $(FS_OBJ) $(FS_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/fs_test $(FS_TEST_OBJ) $(FS_OBJ) -lpthread
+
+system:start $(SYSTEM_OBJ) $(SYSTEM_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/system_test $(SYSTEM_TEST_OBJ) $(SYSTEM_OBJ)
+
+string:start $(STRING_OBJ) $(STRING_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/string_test $(STRING_TEST_OBJ) $(STRING_OBJ)
+
+unit_test:start $(UNITTEST_OBJ) $(UNITTEST_TEST_OBJ)
+	$(Q) echo "    LD "$(notdir $@)
+	$(Q) $(CPP) -o $(OUT_DIR)/unit_test $(UNITTEST_TEST_OBJ) $(UNITTEST_OBJ)
 start:
 	$(Q) echo "    Start Build Project"
 	$(Q) $(RM) -rf $(OUT_DIR)
@@ -148,7 +206,39 @@ $(SQLITE3_OBJ) $(SQLITE3_TEST_OBJ):%.o: %.c
 	@echo "    CC "$(notdir $@)
 	$(Q) $(GCC) -c $< -o $@ $(CFLAGE_DEFINE) $(INCLUDE_ALL)
 
-$(SYSTEM_TOOLS_OBJ) $(SYSTEM_TOOLS_TEST_OBJ):%.o: %.cpp
+$(SYSTEM_OBJ) $(SYSTEM_TEST_OBJ):%.o: %.cpp
+	@echo "    CPP "$(notdir $@)
+	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
+
+$(FLAG_OBJ) $(FLAG_TEST_OBJ):%.o: %.cpp
+	@echo "    CPP "$(notdir $@)
+	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
+
+$(TIME_OBJ) $(TIME_TEST_OBJ):%.o: %.cpp
+	@echo "    CPP "$(notdir $@)
+	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
+
+$(RAND_OBJ) $(RAND_TEST_OBJ):%.o: %.cpp
+	@echo "    CPP "$(notdir $@)
+	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
+
+$(TASK_OBJ) $(TASK_TEST_OBJ):%.o: %.cpp
+	@echo "    CPP "$(notdir $@)
+	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
+
+$(PATH_OBJ) $(PATH_TEST_OBJ):%.o: %.cpp
+	@echo "    CPP "$(notdir $@)
+	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
+
+$(FS_OBJ) $(FS_TEST_OBJ):%.o: %.cpp
+	@echo "    CPP "$(notdir $@)
+	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
+
+$(STRING_OBJ) $(STRING_TEST_OBJ):%.o: %.cpp
+	@echo "    CPP "$(notdir $@)
+	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
+
+$(UNITTEST_OBJ) $(UNITTEST_TEST_OBJ):%.o: %.cpp
 	@echo "    CPP "$(notdir $@)
 	$(Q) $(CPP) -c $< -o $@ $(CPPFLAGE_DEFINE) $(INCLUDE_ALL)
 
@@ -163,4 +253,12 @@ clean:
 	$(Q) -rm -rf $(LOG_OBJ) $(LOG_TEST_OBJ)
 	$(Q) -rm -rf $(NET_OBJ) $(NET_TEST_OBJ)
 	$(Q) -rm -rf $(SQLITE3_OBJ) $(SQLITE3_TEST_OBJ)
-	$(Q) -rm -rf $(SYSTEM_TOOLS_OBJ) $(SYSTEM_TOOLS_TEST_OBJ)
+	$(Q) -rm -rf $(SYSTEM_OBJ) $(SYSTEM_TEST_OBJ)
+	$(Q) -rm -rf $(FLAG_OBJ) $(FLAG_TEST_OBJ)
+	$(Q) -rm -rf $(TIME_OBJ) $(TIME_TEST_OBJ)
+	$(Q) -rm -rf $(RAND_OBJ) $(RAND_TEST_OBJ)
+	$(Q) -rm -rf $(TASK_OBJ) $(TASK_TEST_OBJ)
+	$(Q) -rm -rf $(PATH_OBJ) $(PATH_TEST_OBJ)
+	$(Q) -rm -rf $(FS_OBJ) $(FS_TEST_OBJ)
+	$(Q) -rm -rf $(STRING_OBJ) $(STRING_TEST_OBJ)
+	$(Q) -rm -rf $(UNITTEST_OBJ) $(UNITTEST_TEST_OBJ)
