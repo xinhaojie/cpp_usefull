@@ -1,75 +1,69 @@
-/****************************************************************************************************
-* @Author       : xinhaojie xinhaojie@qq.com
-* @Date         : 2025-03-12 16:35:39
-* @LastEditors  : xinhaojie xinhaojie@qq.com
-* @LastEditTime : 2025-03-12 16:35:44
-* @FilePath     : /cpp_usefull/sqlite3/test.cpp
-* @Description  : 
-* @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
-****************************************************************************************************/
-#include "sqlite_wrapper.hpp"
+#include "tiny_sqlite3.hpp"
 
 int main() {
     try {
-        // 这里默认使用 INCREMENTAL 模式，可不传第二个参数
-        SQLiteWrapper db("test.db");
+        tiny_sqlite3::SQLiteWrapper db("test.db");
+        db.set_auto_vacuum_mode(1);
 
         // 创建表
-        db.createTable("users", "id INTEGER PRIMARY KEY, name TEXT, age INTEGER");
+        db.create_table("test_table", "id INT, name TEXT, num REAL, date_time TEXT");
 
-        // 插入数据
-        db.insert("users", {"name", "age"}, {"John", "25"});
-        db.insert("users", {"name", "age"}, {"Jane", "30"});
-        db.insert("users", {"name", "age"}, {"Doe", "22"});
+        // 开始事务
+        db.begin_transaction();
 
-        // 查询数据并按年龄升序排序
-        auto result = db.select("users", {"name", "age"}, "", "age ASC");
-        std::cout << "Query results sorted by age in ascending order:" << std::endl;
-        for (const auto& row : result) {
-            for (const auto& col : row) {
-                std::cout << col << " ";
-            }
-            std::cout << std::endl;
+        try {
+            // 插入数据
+            auto now = std::chrono::system_clock::now();
+            std::vector<tiny_sqlite3::Value> values = {1, "John", 3.14, now};
+            db.insert("test_table", "id, name, num, date_time", values);
+
+            // 更新数据
+            db.update("test_table", "name = 'Jane'", "id = 1");
+
+            // 提交事务
+            db.commit_transaction();
+            std::cout << "Transaction committed successfully." << std::endl;
+        } catch (const std::exception& e) {
+            // 回滚事务
+            db.rollback_transaction();
+            std::cerr << "Transaction rolled back due to error: " << e.what() << std::endl;
         }
 
-        // 多条件查询
-        auto multiConditionResult = db.select("users", {"name", "age"}, "age > 20 AND age < 30", "name DESC");
-        std::cout << "\nQuery results with multiple conditions sorted by name in descending order:" << std::endl;
-        for (const auto& row : multiConditionResult) {
-            for (const auto& col : row) {
-                std::cout << col << " ";
-            }
-            std::cout << std::endl;
-        }
+        // 查询数据
+        tiny_sqlite3::TableWrapper result;
+        db.select("*", "test_table", result);
 
-        // 批量查询
-        auto batchResults = db.batchSelect("users", {"name", "age"}, {"age > 20", "age < 30"}, "age ASC");
-        std::cout << "\nBatch query results:" << std::endl;
-        for (const auto& resultSet : batchResults) {
-            for (const auto& row : resultSet) {
-                for (const auto& col : row) {
-                    std::cout << col << " ";
+        // 遍历查询结果
+        result.for_each_row([](const std::unordered_map<std::string, tiny_sqlite3::Value>& row) {
+            for (const auto& [column, value] : row) {
+                if (std::holds_alternative<int>(value)) {
+                    std::cout << column << ": " << std::get<int>(value) << "\t";
+                } else if (std::holds_alternative<double>(value)) {
+                    std::cout << column << ": " << std::get<double>(value) << "\t";
+                } else if (std::holds_alternative<std::string>(value)) {
+                    std::cout << column << ": " << std::get<std::string>(value) << "\t";
+                } else if (std::holds_alternative<tiny_sqlite3::TimePoint>(value)) {
+                    std::cout << column << ": " << result.time_point_to_string(std::get<tiny_sqlite3::TimePoint>(value)) << "\t";
                 }
-                std::cout << std::endl;
             }
             std::cout << std::endl;
+        });
+
+        // 根据行索引和列名获取数据
+        try {
+            const auto& value = result.get_value(0, "date_time");
+            if (std::holds_alternative<tiny_sqlite3::TimePoint>(value)) {
+                std::cout << "Value at row 0, column 'date_time': " << result.time_point_to_string(std::get<tiny_sqlite3::TimePoint>(value)) << std::endl;
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Error getting value: " << e.what() << std::endl;
         }
-
-        // 修改数据
-        db.update("users", "age = 26", "name = 'John'");
-
-        // 删除数据
-        db.remove("users", "name = 'Doe'");
-
-        // 批量删除
-        db.batchRemove("users", {"age > 25"});
 
         // 删除表
-        db.dropTable("users");
+        db.drop_table("test_table");
 
-    } catch (const SQLiteException& e) {
-        std::cerr << "SQLite error: " << e.what() << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
     }
-
     return 0;
 }

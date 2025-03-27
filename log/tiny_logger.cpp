@@ -1,4 +1,4 @@
-#include "tiny_logger.hxx"
+#include "tiny_logger.hpp"
 #include <iomanip>
 
 logger& logger::get_instance(std::string log_path,

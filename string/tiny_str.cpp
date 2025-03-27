@@ -7,7 +7,7 @@
 * @Description  :
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
-#include "tiny_str.hxx"
+#include "tiny_str.hpp"
 
 namespace tiny_str {
 

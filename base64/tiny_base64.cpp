@@ -8,7 +8,7 @@
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
 
-#include "tiny_base64.hxx"
+#include "tiny_base64.hpp"
 
 namespace tiny_base64 {
 const std::string Base64::base64_chars =

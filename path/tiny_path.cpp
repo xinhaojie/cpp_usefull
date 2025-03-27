@@ -7,7 +7,7 @@
 * @Description  :
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
-#include "tiny_path.hxx"
+#include "tiny_path.hpp"
 #include <sstream>
 #include <algorithm>
 

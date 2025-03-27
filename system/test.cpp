@@ -1,4 +1,4 @@
-#include "tiny_system.hxx"
+#include "tiny_system.hpp"
 #include <unistd.h>
 #include <cstdlib>
 #include <iostream>

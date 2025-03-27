@@ -1,4 +1,4 @@
-#include "tiny_path.hxx"
+#include "tiny_path.hpp"
 #include <iostream>
 
 using tiny_path::path;

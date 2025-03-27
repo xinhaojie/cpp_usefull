@@ -1,4 +1,4 @@
-#include "fastring.h"
+#include "tiny_string.hpp"
 #include <iostream>
 #include <string>
 

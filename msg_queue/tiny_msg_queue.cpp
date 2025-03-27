@@ -1,4 +1,4 @@
-#include "tiny_message_queue.hxx"
+#include "tiny_message_queue.hpp"
 
 namespace tiny_message_queue {
 

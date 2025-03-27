@@ -7,7 +7,7 @@
 * @Description  :
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
-#include "tiny_unit.hxx"
+#include "tiny_unit.hpp"
 
 // 示例测试用例
 TINY_UNIT_TEST(ExampleTestSuite, SubtractionTest) {

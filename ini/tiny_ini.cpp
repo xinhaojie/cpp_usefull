@@ -2,12 +2,12 @@
 * @Author       : xinhaojie xinhaojie@qq.com
 * @Date         : 2025-03-12 16:41:26
 * @LastEditors  : xinhaojie xinhaojie@qq.com
-* @LastEditTime : 2025-03-13 14:20:42
+* @LastEditTime : 2025-03-27 14:01:36
 * @FilePath     : /cpp_usefull/ini/tiny_ini.cpp
 * @Description  : ini文件解析
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
-#include "tiny_ini.hxx"
+#include "tiny_ini.hpp"
 
 namespace tiny_ini {
 
@@ -31,8 +31,23 @@ bool IniParser::load(const std::string& filename) {
     std::string line;
     std::string currentSection;
     while (std::getline(file, line)) {
+        // 移除行尾的注释（以 # 或 ; 开头）
+        size_t commentPos1 = line.find('#');
+        size_t commentPos2 = line.find(';');
+        size_t commentPos = std::string::npos;
+        if (commentPos1 != std::string::npos && commentPos2 != std::string::npos) {
+            commentPos = std::min(commentPos1, commentPos2);
+        } else if (commentPos1 != std::string::npos) {
+            commentPos = commentPos1;
+        } else if (commentPos2 != std::string::npos) {
+            commentPos = commentPos2;
+        }
+        if (commentPos != std::string::npos) {
+            line = line.substr(0, commentPos);
+        }
+
         line = trim(line);
-        if (line.empty() || line[0] == ';') {
+        if (line.empty()) {
             continue;
         }
         if (line[0] == '[') {

@@ -35,13 +35,13 @@ enum class log_level {
 
 class logger {
 public:
-    static logger& get_instance(std::string log_path = "./logs/log",
+    static logger& get_instance(std::string log_path = "/var/log/tiny_log",
                                 size_t max_size = (5 * 1024 * 1024),
                                 uint32_t file_counts = 5,
                                 bool compress = true,
                                 bool output_to_file = true,
                                 bool output_to_stdout = false,
-                                log_level log_level = log_level::_ERROR);      // 获取单例实例.可以不传参使用默认参数
+                                log_level log_level = log_level::_INFO);      // 获取单例实例.可以不传参使用默认参数
 
     class log_stream {
     public:
@@ -107,10 +107,10 @@ private:
 #define LOG_INFO(...) logger::get_instance().info(__FILE__, __LINE__) << __VA_ARGS__
 #define LOG_WARN(...) logger::get_instance().warn(__FILE__, __LINE__) << __VA_ARGS__
 #define LOG_ERROR(...) logger::get_instance().error(__FILE__, __LINE__) << __VA_ARGS__
-#define LOG_DEBUG_F(fmt, ...) logger::get_instance().logf(log_level::_DEBUG, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define LOG_INFO_F(fmt, ...) logger::get_instance().logf(log_level::_INFO, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define LOG_WARN_F(fmt, ...) logger::get_instance().logf(log_level::_WARN, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define LOG_ERROR_F(fmt, ...) logger::get_instance().logf(log_level::_ERROR, __FILE__, __LINE__, fmt, __VA_ARGS__)
+#define LOG_DEBUG_F(fmt, ...) logger::get_instance().logf(log_level::_DEBUG, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
+#define LOG_INFO_F(fmt, ...) logger::get_instance().logf(log_level::_INFO, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
+#define LOG_WARN_F(fmt, ...) logger::get_instance().logf(log_level::_WARN, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
+#define LOG_ERROR_F(fmt, ...) logger::get_instance().logf(log_level::_ERROR, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
 
 //可以在程序运行前调用修改日志参数，不修改则使用默认值
 #define LOG_ARGS(path, size, file_counts, compress, output_to_file, output_to_stdout, log_level) logger::get_instance(path, size, file_counts, compress, output_to_file, output_to_stdout, log_level)

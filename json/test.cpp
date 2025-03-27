@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "json.hxx"
+#include "json.hpp"
 int main() {
     try {
         // 创建 PeopleGroup 对象

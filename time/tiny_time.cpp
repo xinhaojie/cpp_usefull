@@ -8,7 +8,7 @@
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
 
-#include "tiny_time.hxx"
+#include "tiny_time.hpp"
 #include <iostream>
 #include <iomanip>
 #include <sstream>

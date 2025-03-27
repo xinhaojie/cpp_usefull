@@ -1,4 +1,4 @@
-#include "tiny_task.hxx"
+#include "tiny_task.hpp"
 #include <iostream>
 #include <thread>
 

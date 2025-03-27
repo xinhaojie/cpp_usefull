@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "tiny_net.hxx"
+#include "tiny_net.hpp"
 
 using network_utils::NetServer;
 

@@ -1,4 +1,4 @@
-#include "tiny_system.hxx"
+#include "tiny_system.hpp"
 #include <iostream>
 #include <thread>
 #include <filesystem>

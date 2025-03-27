@@ -2,12 +2,12 @@
 * @Author       : xinhaojie xinhaojie@qq.com
 * @Date         : 2025-03-18 16:27:22
 * @LastEditors  : xinhaojie xinhaojie@qq.com
-* @LastEditTime : 2025-03-18 17:12:48
+* @LastEditTime : 2025-03-27 14:01:07
 * @FilePath     : /cpp_usefull/flag/test.cpp
 * @Description  :
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
-#include "tiny_flag.hxx"
+#include "tiny_flag.hpp"
 #include <iostream>
 #include <cassert>
 

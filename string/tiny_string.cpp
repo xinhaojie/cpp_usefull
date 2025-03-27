@@ -1,4 +1,4 @@
-#include "tiny_string.hxx"
+#include "tiny_string.hpp"
 
 namespace tiny_string {
     void fastring::ensure_capacity(size_t new_size) {

@@ -1,4 +1,4 @@
-#include "tiny_net.hxx"
+#include "tiny_net.hpp"
 
 namespace network_utils {
 

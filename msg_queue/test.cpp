@@ -7,7 +7,7 @@
 * @Description  :
 * @Copyright (c) 2025 by xinhaojie@qq.com, All Rights Reserved.
 ****************************************************************************************************/
-#include "tiny_message_queue.hxx"
+#include "tiny_message_queue.hpp"
 #include <thread>
 #include <iostream>
 #include <vector>
